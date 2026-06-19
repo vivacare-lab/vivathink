@@ -47,9 +47,7 @@ export default function SignUpPage() {
         email,
         password,
         options: {
-          emailRedirectTo:
-            envClient.supabase.redirectUrl ??
-            `${window.location.origin}/auth/callback`,
+          emailRedirectTo: envClient.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL,
           data: { display_name: displayName },
         },
       });
