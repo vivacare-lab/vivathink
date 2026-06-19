@@ -2,9 +2,9 @@ import { cookies } from 'next/headers';
 import { createHmac, timingSafeEqual, randomBytes, scryptSync } from 'crypto';
 
 const CHILD_COOKIE = 'vt_child_session';
+
 function getSessionSecret() {
-  const secret =
-    process.env.CHILD_SESSION_SECRET || process.env.SUPABASE_JWT_SECRET;
+  const secret = process.env.CHILD_SESSION_SECRET;
 
   if (!secret) {
     throw new Error('Missing CHILD_SESSION_SECRET or SUPABASE_JWT_SECRET');
