@@ -2,7 +2,7 @@ import 'server-only';
 
 import { createAdminClient } from '@/lib/supabase/admin';
 import type { AttemptRecord } from './types';
-import type { Feedback } from '@/lib/ai';
+import type { Difficulty, Feedback } from '@/lib/ai';
 
 const ATTEMPT_SELECT =
   'id, word1, word2, question, feedback, score, strengths, suggestion, created_at';
@@ -14,6 +14,7 @@ export async function createAttempt(input: {
   word2: string;
   question: string;
   feedback: Feedback;
+  difficulty: Difficulty;
 }): Promise<AttemptRecord | null> {
   const supabase = createAdminClient();
 
@@ -29,6 +30,10 @@ export async function createAttempt(input: {
       score: input.feedback.score,
       strengths: input.feedback.strengths,
       suggestion: input.feedback.suggestion,
+      level: input.feedback.level,
+      next_question_hint: input.feedback.nextQuestionHint,
+      rubric: input.feedback.rubric,
+      difficulty: input.difficulty,
     })
     .select(ATTEMPT_SELECT)
     .single();

@@ -1,11 +1,10 @@
 import Link from 'next/link';
 import { getParentChildren } from '@/lib/parent/data';
-
-// TODO: 실제 부모 auth 연동 후 교체
-const TEMP_PARENT_ID = 'replace-with-parent-id';
+import { getCurrentParent } from '@/lib/auth/parent';
 
 export default async function ParentPage() {
-  const children = await getParentChildren(TEMP_PARENT_ID);
+  const parent = await getCurrentParent();
+  const children = await getParentChildren(parent.id);
 
   return (
     <main className='mx-auto max-w-5xl space-y-8 p-6'>

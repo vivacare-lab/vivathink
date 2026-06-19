@@ -9,6 +9,7 @@ const fallbackWords: WordPair = {
   word1: '구름',
   word2: '고양이',
   theme: '하늘과 동물이 만나는 상상',
+  difficulty: 'creative',
 };
 
 export default async function PlayPage() {

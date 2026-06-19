@@ -1,6 +1,5 @@
+import { getCurrentParent } from '@/lib/auth/parent';
 import { getChildOrThrow, getChildScoreSummary } from '@/lib/parent/data';
-
-const TEMP_PARENT_ID = 'replace-with-parent-id';
 
 export default async function ChildScoresPage({
   params,
@@ -9,8 +8,10 @@ export default async function ChildScoresPage({
 }) {
   const { childId } = await params;
 
-  const child = await getChildOrThrow(childId, TEMP_PARENT_ID);
-  const summary = await getChildScoreSummary(childId, TEMP_PARENT_ID);
+  const parent = await getCurrentParent();
+
+  const child = await getChildOrThrow(childId, parent.id);
+  const summary = await getChildScoreSummary(childId, parent.id);
 
   return (
     <section className='space-y-6'>

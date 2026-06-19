@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { Sparkles, Send, RotateCcw, Gift } from 'lucide-react';
 
-import { submitQuestion } from '@/app/actions/play';
+import { getNewWords, submitQuestion } from '@/app/actions/play';
 import type { WordPair } from '@/lib/ai';
 
 import { Button } from '@/components/ui/button';
@@ -25,7 +25,8 @@ export default function PlayStudio({
   initialWords,
   initialRecent,
 }: PlayStudioProps) {
-  const [words] = useState<WordPair>(initialWords);
+  const [words, setWords] = useState<WordPair>(initialWords);
+  const [isRefreshingWords, setIsRefreshingWords] = useState(false);
   const [question, setQuestion] = useState('');
   const [recent, setRecent] = useState<AttemptRecord[]>(initialRecent);
   const [result, setResult] = useState<AttemptRecord | null>(null);
@@ -45,6 +46,7 @@ export default function PlayStudio({
         word1: words.word1,
         word2: words.word2,
         question,
+        difficulty: words.difficulty,
       });
 
       if (!response.ok) {
@@ -56,7 +58,24 @@ export default function PlayStudio({
       setRecent((prev) => [response.attempt, ...prev].slice(0, 10));
     });
   }
+  async function handleRefreshWords() {
+    if (isPending || isRefreshingWords) return;
 
+    setIsRefreshingWords(true);
+    setError(null);
+    setResult(null);
+    setQuestion('');
+
+    try {
+      const nextWords = await getNewWords();
+      setWords(nextWords);
+    } catch (error) {
+      console.error('refresh words failed:', error);
+      setError('새 단어를 불러오지 못했어요. 다시 시도해 주세요.');
+    } finally {
+      setIsRefreshingWords(false);
+    }
+  }
   function handleReset() {
     setQuestion('');
     setResult(null);
@@ -103,6 +122,16 @@ export default function PlayStudio({
                 <span className='rounded-xl bg-secondary px-5 py-3 text-xl font-bold text-secondary-foreground'>
                   {words.word2}
                 </span>
+                <Button
+                  type='button'
+                  variant='outline'
+                  size='sm'
+                  onClick={handleRefreshWords}
+                  disabled={isPending || isRefreshingWords}
+                >
+                  <RotateCcw className='size-4' />
+                  {isRefreshingWords ? '바꾸는 중...' : '단어 바꾸기'}
+                </Button>
               </div>
 
               <div className='rounded-lg border bg-muted/40 p-4 text-sm text-muted-foreground'>

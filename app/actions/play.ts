@@ -1,7 +1,7 @@
 'use server';
 
 import { getChildSession } from '@/lib/child-session';
-import { generateWordPair, scoreQuestion } from '@/lib/ai';
+import { Difficulty, generateWordPair, scoreQuestion } from '@/lib/ai';
 import { createAttempt, getRecentAttemptsByChildId } from '@/lib/play/attempts';
 import { normalizeQuestion, validateQuestion } from '@/lib/play/validation';
 import type { AttemptRecord, SubmitResult } from '@/lib/play/types';
@@ -13,13 +13,14 @@ export async function getNewWords() {
     throw new Error('로그인이 필요합니다.');
   }
 
-  return generateWordPair();
+  return generateWordPair('normal');
 }
 
 export async function submitQuestion(input: {
   word1: string;
   word2: string;
   question: string;
+  difficulty: Difficulty;
 }): Promise<SubmitResult> {
   const session = await getChildSession();
 
@@ -39,6 +40,7 @@ export async function submitQuestion(input: {
       word1: input.word1,
       word2: input.word2,
       question,
+      difficulty: input.difficulty,
     });
 
     const attempt = await createAttempt({
@@ -48,6 +50,7 @@ export async function submitQuestion(input: {
       word2: input.word2,
       question,
       feedback,
+      difficulty: input.difficulty,
     });
 
     if (!attempt) {

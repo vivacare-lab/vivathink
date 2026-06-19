@@ -9,7 +9,7 @@ import { envClient } from '@/lib/env.client';
  */
 export function createAdminClient() {
   return createSupabaseClient(
-    envClient.NEXT_PUBLIC_SUPABASE_URL,
+    envClient.supabaseUrl,
     envServer.supabase.serviceRoleKey,
     // 로그인 여부 세션에 저장 비활성, 자동 리프레시 토큰 갱신 비활성
     {

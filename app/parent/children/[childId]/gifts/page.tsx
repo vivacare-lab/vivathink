@@ -1,6 +1,5 @@
+import { getCurrentParent } from '@/lib/auth/parent';
 import { getChildOrThrow, getChildScoreSummary } from '@/lib/parent/data';
-
-const TEMP_PARENT_ID = 'replace-with-parent-id';
 
 export default async function ChildGiftsPage({
   params,
@@ -8,9 +7,10 @@ export default async function ChildGiftsPage({
   params: Promise<{ childId: string }>;
 }) {
   const { childId } = await params;
+  const parent = await getCurrentParent();
 
-  const child = await getChildOrThrow(childId, TEMP_PARENT_ID);
-  const summary = await getChildScoreSummary(childId, TEMP_PARENT_ID);
+  const child = await getChildOrThrow(childId, parent.id);
+  const summary = await getChildScoreSummary(childId, parent.id);
 
   const canGiveGift = summary.totalAttempts >= 10;
 

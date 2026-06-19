@@ -47,7 +47,7 @@ export default function SignUpPage() {
         email,
         password,
         options: {
-          emailRedirectTo: envClient.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL,
+          emailRedirectTo: envClient.supabaseRedirectUrl,
           data: { display_name: displayName },
         },
       });

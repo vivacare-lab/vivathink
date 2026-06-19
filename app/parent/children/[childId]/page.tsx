@@ -4,8 +4,7 @@ import {
   getChildOrThrow,
   getChildScoreSummary,
 } from '@/lib/parent/data';
-
-const TEMP_PARENT_ID = 'replace-with-parent-id';
+import { getCurrentParent } from '@/lib/auth/parent';
 
 export default async function ChildOverviewPage({
   params,
@@ -14,9 +13,11 @@ export default async function ChildOverviewPage({
 }) {
   const { childId } = await params;
 
-  const child = await getChildOrThrow(childId, TEMP_PARENT_ID);
-  const attempts = await getChildAttempts(childId, TEMP_PARENT_ID, 3);
-  const score = await getChildScoreSummary(childId, TEMP_PARENT_ID);
+  const parent = await getCurrentParent();
+
+  const child = await getChildOrThrow(childId, parent.id);
+  const attempts = await getChildAttempts(childId, parent.id, 3);
+  const score = await getChildScoreSummary(childId, parent.id);
 
   return (
     <section className='space-y-6'>

@@ -8,6 +8,10 @@ export type AttemptRecord = {
   strengths: string | null;
   suggestion: string | null;
   created_at: string;
+  level: string | null;
+  next_question_hint: string | null;
+  rubric: Record<string, number> | null;
+  difficulty: string | null;
 };
 
 export type SubmitResult =

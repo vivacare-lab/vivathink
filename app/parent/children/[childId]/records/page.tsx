@@ -1,6 +1,5 @@
+import { getCurrentParent } from '@/lib/auth/parent';
 import { getChildAttempts, getChildOrThrow } from '@/lib/parent/data';
-
-const TEMP_PARENT_ID = 'replace-with-parent-id';
 
 export default async function ChildRecordsPage({
   params,
@@ -9,8 +8,10 @@ export default async function ChildRecordsPage({
 }) {
   const { childId } = await params;
 
-  const child = await getChildOrThrow(childId, TEMP_PARENT_ID);
-  const attempts = await getChildAttempts(childId, TEMP_PARENT_ID, 20);
+  const parent = await getCurrentParent();
+
+  const child = await getChildOrThrow(childId, parent.id);
+  const attempts = await getChildAttempts(childId, parent.id, 20);
 
   return (
     <section className='space-y-6'>
