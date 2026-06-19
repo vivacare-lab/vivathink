@@ -2,7 +2,6 @@ import { Analytics } from '@vercel/analytics/next';
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono, Baloo_2 } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
-import { env } from '@/lib/env';
 import './globals.css';
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
@@ -37,7 +36,7 @@ export default function RootLayout({
       <body className='font-sans antialiased'>
         {children}
         <Toaster richColors position='top-center' />
-        {env.nodeEnv === 'production' && <Analytics />}
+        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   );

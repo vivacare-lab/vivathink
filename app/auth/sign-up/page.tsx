@@ -16,7 +16,7 @@ import {
 import { Logo } from '@/components/ui/logo';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { env } from '@/lib/env';
+import { envClient } from '@/lib/env.client';
 
 export default function SignUpPage() {
   const [displayName, setDisplayName] = useState('');
@@ -48,7 +48,7 @@ export default function SignUpPage() {
         password,
         options: {
           emailRedirectTo:
-            env.supabase.redirectUrl ??
+            envClient.supabase.redirectUrl ??
             `${window.location.origin}/auth/callback`,
           data: { display_name: displayName },
         },

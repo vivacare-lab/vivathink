@@ -1,5 +1,6 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
-import { env } from '@/lib/env';
+import { envServer } from '@/lib/env.server';
+import { envClient } from '@/lib/env.client';
 
 /**
  * Service-role client. Bypasses RLS — use ONLY in trusted server code
@@ -8,8 +9,8 @@ import { env } from '@/lib/env';
  */
 export function createAdminClient() {
   return createSupabaseClient(
-    env.supabase.url,
-    env.supabase.serviceRoleKey,
+    envClient.supabase.url,
+    envServer.supabase.serviceRoleKey,
     // 로그인 여부 세션에 저장 비활성, 자동 리프레시 토큰 갱신 비활성
     {
       auth: { persistSession: false, autoRefreshToken: false },

@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { env } from '@/lib/env';
+import { envServer } from '@/lib/env.server';
 import { createHmac, timingSafeEqual, randomBytes, scryptSync } from 'crypto';
 
 const CHILD_COOKIE = 'vt_child_session';
@@ -11,7 +11,7 @@ export type ChildSession = {
 };
 
 function sign(payload: string) {
-  return createHmac('sha256', env.session.childSecret)
+  return createHmac('sha256', envServer.session.childSecret)
     .update(payload)
     .digest('base64url');
 }
