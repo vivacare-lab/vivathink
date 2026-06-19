@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# stat
 
-## Getting Started
+## UI
 
-First, run the development server:
+npx shadcn@latest init
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## AI
+
+npm install openai
+
+## Backend
+
+npm install @supabase/supabase-js
+
+## 상태관리
+
+npm install zustand
+
+## Form
+
+npm install react-hook-form zod
+
+## 유틸
+
+npm install clsx tailwind-merge
+
+# 불필요한 파일 검토 (프로젝트 푸트에서 실행)
+
+## TypeScript 타입 체크
+
+npx tsc --noEmit
+
+## ESLint
+
+npm run lint
+
+## 사용하지 않는 파일/exports 탐지
+
+npx knip
+
+## 사용하지 않는 dependencies 탐지
+
+npx depcheck
+
+## 특정 파일 참조 확인
+
+grep -R "openai" .
+grep -R "@/ai/gemini" .
+grep -R "@google/genai" .
+grep -R "training-records" .
+
+# DB 구조
+
+user
+
+```spl
+id
+name
+email
+created_at
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+questions
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```spl
+id
+title
+content
+difficulty
+category
+created_at
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+answers
 
-## Learn More
+```spl
+id
+user_id
+question_id
+answer
+ai_feedback
+score
+created_at
+```
 
-To learn more about Next.js, take a look at the following resources:
+training_logs
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```spl
+id
+user_id
+date
+training_time
+score
+```
