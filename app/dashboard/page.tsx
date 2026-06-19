@@ -69,10 +69,9 @@ export default async function DashboardPage() {
         <div className='grid gap-8 lg:grid-cols-[1.1fr_1fr]'>
           {/* Left: children management */}
           <section className='flex flex-col gap-8'>
-            <ChildrenManager
-              children={(children ?? []) as Child[]}
-              origin={origin}
-            />
+            <ChildrenManager origin={origin}>
+              {(children ?? []) as Child[]}
+            </ChildrenManager>
           </section>
 
           {/* Right: recent attempts */}

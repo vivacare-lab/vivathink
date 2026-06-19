@@ -2,8 +2,16 @@ import { cookies } from 'next/headers';
 import { createHmac, timingSafeEqual, randomBytes, scryptSync } from 'crypto';
 
 const CHILD_COOKIE = 'vt_child_session';
-const SECRET = process.env.SUPABASE_JWT_SECRET || 'vivathink-dev-secret';
+function getSessionSecret() {
+  const secret =
+    process.env.CHILD_SESSION_SECRET || process.env.SUPABASE_JWT_SECRET;
 
+  if (!secret) {
+    throw new Error('Missing CHILD_SESSION_SECRET or SUPABASE_JWT_SECRET');
+  }
+
+  return secret;
+}
 export type ChildSession = {
   childId: string;
   parentId: string;
@@ -11,7 +19,9 @@ export type ChildSession = {
 };
 
 function sign(payload: string) {
-  return createHmac('sha256', SECRET).update(payload).digest('base64url');
+  return createHmac('sha256', getSessionSecret())
+    .update(payload)
+    .digest('base64url');
 }
 
 export async function createChildSession(session: ChildSession) {
