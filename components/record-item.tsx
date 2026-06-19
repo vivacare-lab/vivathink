@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import type { AttemptRecord } from '@/app/actions/play';
+import { AttemptRecord } from '@/lib/play/types';
 
 function scoreColor(score: number | null): string {
   if (score === null) return 'text-muted-foreground';

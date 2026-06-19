@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { Sparkles, Send, RotateCcw, Gift } from 'lucide-react';
 
-import { submitQuestion, type AttemptRecord } from '@/app/actions/play';
+import { submitQuestion } from '@/app/actions/play';
 import type { WordPair } from '@/lib/ai';
 
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RecordItem } from '@/components/record-item';
+import { AttemptRecord } from '@/lib/play/types';
 
 type PlayStudioProps = {
   childName: string;
