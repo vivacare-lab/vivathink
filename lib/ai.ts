@@ -3,7 +3,7 @@ import { generateObject } from 'ai';
 import { z } from 'zod';
 
 const model = google('gemini-2.5-flash');
-export const geminiModel = google('gemini-2.5-flash');
+export const geminiModel = model;
 
 export const difficultySchema = z.enum([
   'easy',
@@ -41,7 +41,24 @@ const feedbackSchema = z.object({
   rubric: rubricSchema,
 });
 
-export type Feedback = z.infer<typeof feedbackSchema>;
+export type Feedback = z.infer<typeof feedbackSchema> & { score: number };
+
+function clampScore(score: number) {
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
+function calculateScore(rubric: z.infer<typeof rubricSchema>) {
+  return clampScore(
+    rubric.connection + rubric.originality + rubric.clarity + rubric.depth,
+  );
+}
+
+function getLevel(score: number): Feedback['level'] {
+  if (score < 50) return 'emerging';
+  if (score < 70) return 'developing';
+  if (score < 85) return 'strong';
+  return 'excellent';
+}
 
 function getDifficultyGuide(difficulty: Difficulty) {
   switch (difficulty) {
@@ -146,6 +163,11 @@ level 기준:
 - nextQuestionHint는 아이가 이어서 만들 수 있는 새 질문 힌트 1개
 `,
   });
+  const score = calculateScore(object.rubric);
 
-  return object;
+  return {
+    ...object,
+    score,
+    level: getLevel(score),
+  };
 }

@@ -1,3 +1,10 @@
+export type AttemptRubric = {
+  connection: number;
+  originality: number;
+  clarity: number;
+  depth: number;
+};
+
 export type AttemptRecord = {
   id: string;
   word1: string;
@@ -7,11 +14,11 @@ export type AttemptRecord = {
   score: number | null;
   strengths: string | null;
   suggestion: string | null;
-  created_at: string;
   level: string | null;
   next_question_hint: string | null;
   rubric: Record<string, number> | null;
   difficulty: string | null;
+  created_at: string;
 };
 
 export type SubmitResult =

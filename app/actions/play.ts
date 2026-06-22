@@ -5,6 +5,7 @@ import { Difficulty, generateWordPair, scoreQuestion } from '@/lib/ai';
 import { createAttempt, getRecentAttemptsByChildId } from '@/lib/play/attempts';
 import { normalizeQuestion, validateQuestion } from '@/lib/play/validation';
 import type { AttemptRecord, SubmitResult } from '@/lib/play/types';
+import { recommendDifficulty } from '@/lib/play/difficulty';
 
 export async function getNewWords() {
   const session = await getChildSession();
@@ -13,7 +14,10 @@ export async function getNewWords() {
     throw new Error('로그인이 필요합니다.');
   }
 
-  return generateWordPair('normal');
+  const attempts = await getRecentAttemptsByChildId(session.childId, 5);
+  const difficulty = recommendDifficulty(attempts);
+
+  return generateWordPair(difficulty);
 }
 
 export async function submitQuestion(input: {

@@ -5,7 +5,7 @@ import type { AttemptRecord } from './types';
 import type { Difficulty, Feedback } from '@/lib/ai';
 
 const ATTEMPT_SELECT =
-  'id, word1, word2, question, feedback, score, strengths, suggestion, created_at';
+  'id, word1, word2, question, feedback, score, strengths, suggestion, level, next_question_hint, rubric, difficulty, created_at';
 
 export async function createAttempt(input: {
   childId: string;
