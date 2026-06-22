@@ -13,7 +13,7 @@ export function ChildTabs({ childId }: { childId: string }) {
       {tabs.map((tab) => (
         <Link
           key={tab.label}
-          href={`/parent/children/${childId}${tab.href}`}
+          href={`/dashboard/children/${childId}${tab.href}`}
           className='rounded-full border px-4 py-2 text-sm hover:bg-muted'
         >
           {tab.label}

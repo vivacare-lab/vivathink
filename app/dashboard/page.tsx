@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Attempt, Child } from '@/lib/types';
 import { ChildrenManager } from '@/components/children-manager';
 import { AttemptCard } from '@/components/attempt-card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getParentChildren } from '@/lib/parent/data';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -21,7 +23,7 @@ export default async function DashboardPage() {
     user.email?.split('@')[0] ||
     '부모님';
 
-  const [{ data: children }, { data: attempts }] = await Promise.all([
+  const [childrenResult, attemptsResult, childSummaries] = await Promise.all([
     supabase
       .from('children')
       .select('*')
@@ -33,7 +35,11 @@ export default async function DashboardPage() {
       .eq('parent_id', user.id)
       .order('created_at', { ascending: false })
       .limit(10),
+    getParentChildren(user.id),
   ]);
+
+  const children = childrenResult.data ?? [];
+  const attempts = attemptsResult.data ?? [];
 
   const childMap = new Map((children ?? []).map((c: Child) => [c.id, c.name]));
 
@@ -65,44 +71,54 @@ export default async function DashboardPage() {
             자녀의 창의력 질문 훈련을 관리하고 기록을 확인하세요.
           </p>
         </div>
-
-        <div className='grid gap-8 lg:grid-cols-[1.1fr_1fr]'>
-          {/* Left: children management */}
-          <section className='flex flex-col gap-8'>
-            <ChildrenManager origin={origin}>
-              {(children ?? []) as Child[]}
-            </ChildrenManager>
-          </section>
-
-          {/* Right: recent attempts */}
-          <section className='flex flex-col gap-4'>
-            <h2 className='font-heading text-lg font-bold text-foreground'>
-              최근 질문 기록
-            </h2>
-            {(attempts ?? []).length === 0 ? (
-              <div className='flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center'>
-                <span className='flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-primary'>
-                  <Sparkles className='h-6 w-6' aria-hidden='true' />
-                </span>
-                <p className='text-sm text-muted-foreground'>
-                  아직 진행한 질문이 없어요.
-                  <br />
-                  자녀가 질문 훈련소에서 질문을 만들면 여기에 표시됩니다.
-                </p>
-              </div>
-            ) : (
-              <div className='flex flex-col gap-3'>
-                {(attempts as Attempt[]).map((a) => (
-                  <AttemptCard
-                    key={a.id}
-                    attempt={a}
-                    childName={childMap.get(a.child_id)}
-                  />
-                ))}
-              </div>
-            )}
-          </section>
-        </div>
+        <Tabs defaultValue='children' className='w-full'>
+          <TabsList>
+            <TabsTrigger value='children'>자녀관리</TabsTrigger>
+            <TabsTrigger value='recentRecord'>최근 질문 기록</TabsTrigger>
+          </TabsList>
+          <TabsContent value='children' className='mt-6 space-y-6'>
+            <div className='grid gap-8 lg:grid-cols-[1.1fr_1fr]'>
+              {/* Left: children management */}
+              <section className='flex flex-col gap-8'>
+                <ChildrenManager summaries={childSummaries} origin={origin}>
+                  {(children ?? []) as Child[]}
+                </ChildrenManager>
+              </section>
+            </div>
+          </TabsContent>
+          <TabsContent value='recentRecord' className='mt-6'>
+            <div className='grid gap-8 lg:grid-cols-[1.1fr_1fr]'>
+              {/* Right: recent attempts */}
+              <section className='flex flex-col gap-4'>
+                <h2 className='font-heading text-lg font-bold text-foreground'>
+                  최근 질문 기록
+                </h2>
+                {(attempts ?? []).length === 0 ? (
+                  <div className='flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center'>
+                    <span className='flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-primary'>
+                      <Sparkles className='h-6 w-6' aria-hidden='true' />
+                    </span>
+                    <p className='text-sm text-muted-foreground'>
+                      아직 진행한 질문이 없어요.
+                      <br />
+                      자녀가 질문 훈련소에서 질문을 만들면 여기에 표시됩니다.
+                    </p>
+                  </div>
+                ) : (
+                  <div className='flex flex-col gap-3'>
+                    {(attempts as Attempt[]).map((a) => (
+                      <AttemptCard
+                        key={a.id}
+                        attempt={a}
+                        childName={childMap.get(a.child_id)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+            </div>
+          </TabsContent>
+        </Tabs>
 
         <div className='mt-10 rounded-3xl bg-secondary p-6 text-center md:p-8'>
           <h3 className='font-heading text-lg font-bold text-secondary-foreground'>
