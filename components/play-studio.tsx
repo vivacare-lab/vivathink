@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RecordItem } from '@/components/record-item';
 import { AttemptRecord } from '@/lib/play/types';
+import { signOutChild } from '@/app/actions/child-auth';
 
 type PlayStudioProps = {
   childName: string;
@@ -84,13 +85,20 @@ export default function PlayStudio({
 
   return (
     <main className='mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8'>
+      <div className='absolute top-0 right-0'>
+        <form action={signOutChild}>
+          <Button type='submit' variant='outline' size='sm'>
+            나가기
+          </Button>
+        </form>
+      </div>
       <section className='space-y-2'>
         <Badge variant='secondary' className='w-fit'>
           VivaThink 창의력 체육관
         </Badge>
 
         <h1 className='text-2xl font-bold tracking-tight'>
-          {childName}의 창의력 운동장
+          {childName}의 창의력 운동장 !
         </h1>
 
         <p className='text-sm text-muted-foreground'>

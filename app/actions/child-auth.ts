@@ -1,5 +1,6 @@
 'use server';
 
+import { redirect } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
 import {
   createChildSession,
@@ -7,7 +8,6 @@ import {
   hashPin,
   verifyPin,
 } from '@/lib/child-session';
-import { redirect } from 'next/navigation';
 
 type ActionResult = { error?: string; needsPin?: boolean };
 
@@ -87,7 +87,7 @@ export async function loginChild(
   redirect('/play');
 }
 
-export async function logoutChild() {
+export async function signOutChild() {
   await clearChildSession();
-  redirect('/');
+  redirect('/play/access-required?reason=signed-out');
 }

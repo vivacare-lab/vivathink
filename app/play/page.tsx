@@ -14,7 +14,7 @@ const fallbackWords: WordPair = {
 
 export default async function PlayPage() {
   const session = await getChildSession();
-  if (!session) redirect('/');
+  if (!session) redirect('/play/access-required');
 
   const [initialWords, recent] = await Promise.all([
     getNewWords().catch(() => fallbackWords),
