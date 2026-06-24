@@ -1,15 +1,14 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { Sparkles, LogOut } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
-import { Logo } from '@/components/ui/logo';
-import { Button } from '@/components/ui/button';
 import { Attempt, Child } from '@/lib/types';
+import { getParentChildren } from '@/lib/parent/data';
+import { Button } from '@/components/ui/button';
 import { ChildrenManager } from '@/components/children-manager';
 import { AttemptCard } from '@/components/attempt-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { getParentChildren } from '@/lib/parent/data';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -50,18 +49,6 @@ export default async function DashboardPage() {
 
   return (
     <div className='flex min-h-dvh flex-col bg-background'>
-      <header className='border-b border-border bg-card'>
-        <div className='mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-4'>
-          <Logo />
-          <form action='/auth/sign-out' method='post'>
-            <Button type='submit' variant='ghost' size='sm'>
-              <LogOut className='h-4 w-4' aria-hidden='true' />
-              로그아웃
-            </Button>
-          </form>
-        </div>
-      </header>
-
       <main className='mx-auto w-full max-w-5xl flex-1 px-4 py-8'>
         <div className='mb-8'>
           <h1 className='font-heading text-2xl font-bold text-foreground md:text-3xl'>

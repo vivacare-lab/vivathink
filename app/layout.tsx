@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono, Baloo_2 } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
+import { GlobalHeader } from '@/components/global-header';
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({
@@ -34,6 +35,7 @@ export default function RootLayout({
       className={`light ${geistSans.variable} ${geistMono.variable} ${baloo.variable} bg-background`}
     >
       <body className='font-sans antialiased'>
+        <GlobalHeader />
         {children}
         <Toaster richColors position='top-center' />
         {process.env.NODE_ENV === 'production' && <Analytics />}

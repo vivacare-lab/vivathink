@@ -37,18 +37,6 @@ export default async function HomePage() {
 
   return (
     <div className='flex min-h-dvh flex-col bg-background'>
-      <header className='mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5'>
-        <Logo />
-        <div className='flex items-center gap-2'>
-          <Button asChild variant='ghost'>
-            <Link href='/auth/login'>로그인</Link>
-          </Button>
-          <Button asChild>
-            <Link href='/auth/sign-up'>시작하기</Link>
-          </Button>
-        </div>
-      </header>
-
       <main className='flex-1'>
         {/* Hero */}
         <section className='mx-auto grid w-full max-w-6xl items-center gap-10 px-4 py-12 md:grid-cols-2 md:py-20'>
