@@ -41,13 +41,14 @@ export default function SignUpPage() {
     }
 
     const supabase = createClient();
+    const redirectUrl = envClient.supabaseRedirectUrl ?? `${window.location.origin}/auth/callback`;
     setIsLoading(true);
     try {
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: envClient.supabaseRedirectUrl,
+          emailRedirectTo: redirectUrl,
           data: { display_name: displayName },
         },
       });

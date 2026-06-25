@@ -12,6 +12,5 @@ export const envClient = schema.parse({
   supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
 
   supabaseRedirectUrl:
-    process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ??
-    `${window.location.origin}/auth/callback`,
+    process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL,
 });
