@@ -2,18 +2,16 @@
 
 import { useState, useTransition } from 'react';
 import { Sparkles, Send, RotateCcw, Gift } from 'lucide-react';
-
 import { getNewWords, submitQuestion } from '@/app/actions/play';
-import type { WordPair } from '@/lib/ai';
 
+import { AttemptRecord } from '@/lib/play/types';
+import { WordPair } from '@/lib/ai';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RecordItem } from '@/components/record-item';
-import { AttemptRecord } from '@/lib/play/types';
-import { signOutChild } from '@/app/actions/child-auth';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 type PlayStudioProps = {
   childName: string;
@@ -85,13 +83,6 @@ export default function PlayStudio({
 
   return (
     <main className='mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8'>
-      <div className='absolute top-0 right-0'>
-        <form action={signOutChild}>
-          <Button type='submit' variant='outline' size='sm'>
-            나가기
-          </Button>
-        </form>
-      </div>
       <section className='space-y-2'>
         <Badge variant='secondary' className='w-fit'>
           VivaThink 창의력 체육관

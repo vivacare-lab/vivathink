@@ -1,4 +1,5 @@
-import { getCurrentParent } from '@/lib/auth/parent';
+import { WordPairManager } from '@/components/parent/word-pair-manager';
+import { getParentSession } from '@/lib/auth/parent';
 import { getChildOrThrow, getChildScoreSummary } from '@/lib/parent/data';
 
 export default async function ChildGiftsPage({
@@ -7,7 +8,7 @@ export default async function ChildGiftsPage({
   params: Promise<{ childId: string }>;
 }) {
   const { childId } = await params;
-  const parent = await getCurrentParent();
+  const parent = await getParentSession();
 
   const child = await getChildOrThrow(childId, parent.id);
   const summary = await getChildScoreSummary(childId, parent.id);
@@ -49,7 +50,9 @@ export default async function ChildGiftsPage({
           </div>
         </div>
       </div>
-
+      <div>
+        <WordPairManager />
+      </div>
       <div className='rounded-lg border p-6'>
         <h2 className='text-lg font-semibold'>임시 보상</h2>
 

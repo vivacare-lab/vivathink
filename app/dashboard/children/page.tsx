@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { getParentChildren } from '@/lib/parent/data';
-import { getCurrentParent } from '@/lib/auth/parent';
+import { getParentSession } from '@/lib/auth/parent';
 
 export default async function ParentPage() {
-  const parent = await getCurrentParent();
+  const parent = await getParentSession();
   const children = await getParentChildren(parent.id);
 
   return (
@@ -47,8 +47,8 @@ export default async function ParentPage() {
                   <p className='font-semibold'>
                     {child.latestAttemptAt
                       ? new Date(child.latestAttemptAt).toLocaleDateString(
-                          'ko-KR',
-                        )
+                        'ko-KR',
+                      )
                       : '-'}
                   </p>
                 </div>

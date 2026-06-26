@@ -1,9 +1,8 @@
 import { redirect } from 'next/navigation';
-
 import { getChildSession } from '@/lib/child-session';
+import { WordPair } from '@/lib/ai';
 import { getChildRecentAttempts, getNewWords } from '@/app/actions/play';
 import PlayStudio from '@/components/play-studio';
-import type { WordPair } from '@/lib/ai';
 
 const fallbackWords: WordPair = {
   word1: '구름',

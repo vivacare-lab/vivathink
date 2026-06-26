@@ -4,7 +4,7 @@ import {
   getChildOrThrow,
   getChildScoreSummary,
 } from '@/lib/parent/data';
-import { getCurrentParent } from '@/lib/auth/parent';
+import { getParentSession } from '@/lib/auth/parent';
 
 export default async function ChildOverviewPage({
   params,
@@ -13,7 +13,7 @@ export default async function ChildOverviewPage({
 }) {
   const { childId } = await params;
 
-  const parent = await getCurrentParent();
+  const parent = await getParentSession();
 
   const child = await getChildOrThrow(childId, parent.id);
   const attempts = await getChildAttempts(childId, parent.id, 3);

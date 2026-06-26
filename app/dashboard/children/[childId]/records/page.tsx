@@ -1,4 +1,4 @@
-import { getCurrentParent } from '@/lib/auth/parent';
+import { getParentSession } from '@/lib/auth/parent';
 import { getChildAttempts, getChildOrThrow } from '@/lib/parent/data';
 
 export default async function ChildRecordsPage({
@@ -8,7 +8,7 @@ export default async function ChildRecordsPage({
 }) {
   const { childId } = await params;
 
-  const parent = await getCurrentParent();
+  const parent = await getParentSession();
 
   const child = await getChildOrThrow(childId, parent.id);
   const attempts = await getChildAttempts(childId, parent.id, 20);

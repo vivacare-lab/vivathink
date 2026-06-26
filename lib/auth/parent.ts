@@ -3,7 +3,7 @@ import 'server-only';
 import { redirect } from 'next/navigation';
 import { createClient as createServerClient } from '@/lib/supabase/server';
 
-export async function getCurrentParent() {
+export async function getParentSession() {
   const supabase = await createServerClient();
 
   const {

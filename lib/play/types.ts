@@ -1,9 +1,4 @@
-export type AttemptRubric = {
-  connection: number;
-  originality: number;
-  clarity: number;
-  depth: number;
-};
+import { AttemptRubric } from '../ai';
 
 export type AttemptRecord = {
   id: string;
@@ -16,7 +11,7 @@ export type AttemptRecord = {
   suggestion: string | null;
   level: string | null;
   next_question_hint: string | null;
-  rubric: Record<string, number> | null;
+  rubric: AttemptRubric | null;
   difficulty: string | null;
   created_at: string;
 };
