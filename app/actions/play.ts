@@ -1,7 +1,7 @@
 'use server';
 
 import { getChildSession } from '@/lib/child-session';
-import { scoreQuestion, type Difficulty } from '@/lib/ai';
+import { scoreQuestion } from '@/lib/ai';
 import {
   getNewWordsAvoidingRecent,
   recordWordPairUsage,
@@ -10,6 +10,7 @@ import { createAttempt, getRecentAttemptsByChildId } from '@/lib/play/attempts';
 import { normalizeQuestion, validateQuestion } from '@/lib/play/validation';
 import type { AttemptRecord, SubmitResult } from '@/lib/play/types';
 import { recommendDifficulty } from '@/lib/play/difficulty';
+import { Difficulty } from '@/lib/word-pairs/types';
 
 /**
  * 새로운 단어 쌍을 가져옵니다.

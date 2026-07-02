@@ -13,6 +13,8 @@
 # testing
 /coverage
 /migration
+/script
+/data
 
 # next.js
 /.next/

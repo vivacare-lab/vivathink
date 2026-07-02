@@ -4,10 +4,10 @@ import { z } from 'zod';
 import {
   feedbackSchema,
   rubricSchema,
-  type Difficulty,
   type Feedback,
 } from './types';
 import { getScoringSystemPrompt, getScoringPrompt } from './prompts';
+import { Difficulty } from '../word-pairs/types';
 
 const model = google('gemini-2.5-flash');
 
@@ -54,7 +54,8 @@ function getLevel(score: number): Feedback['level'] {
  *   word1: "그림자",
  *   word2: "약속",
  *   question: "그림자처럼 보이지는 않지만 꼭 우리 곁에 있는 약속은?",
- *   difficulty: "normal"
+ *   difficulty: "normal",
+
  * });
  */
 export async function scoreQuestion(input: {

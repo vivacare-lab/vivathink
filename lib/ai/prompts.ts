@@ -1,4 +1,4 @@
-import type { Difficulty } from './types';
+import type { Difficulty } from '../word-pairs/types';
 
 export function getDifficultyGuide(difficulty: Difficulty): string {
   switch (difficulty) {
@@ -23,25 +23,25 @@ export function getWordGenerationPrompt(difficulty: Difficulty): string {
 한국어 명사 두 개를 골라주세요.
 
 조건:
-- 두 단어는 직접적인 연관보다 생각할 거리가 생기는 조합을 우선, 뻔하지 않을 것
-- 동일한 word1 또는 word2는 전체 데이터에서 최대 2회까지만 등장 할 것
+- 두 단어가 너무 뻔하게 연결되지 않을 것
 - 질문 만들기를 자극할 것
 - 단어는 각각 2~5글자 정도
 - 너무 유아적이거나 지나치게 쉬운 단어는 피할 것
-- 아동도 이해할 수 있는 단어를 우선하지만 사고 수준은 난이도에 맞춘다.
 - difficulty는 반드시 "${difficulty}"로 반환할 것
+- category1, category2는 단어가 속한 분야를 넣을 것
+- tags는 3~6개 정도로 넣을 것
+- tags에는 분야, 사고방식, 질문 방향을 포함할 것
 - theme은 두 단어를 연결하는 짧은 힌트 문장
-- theme은 매번 새로운 표현을 사용
-- 같은 분야의 단어만 연속해서 생성하지 않는다.
-- 분야를 섞어서 질문의 품질을 높이고 다양성을 추구할 것
-- 분야: 일상, 자연, 과학, 수학, 경제, 사회, 역사, 예술, 문학, 심리 등
 
 반환 예시:
 {
-  "word1": "그림자",
-  "word2": "약속",
-  "theme": "보이지 않는 것이 마음을 움직일 때",
-  "difficulty": "${difficulty}"
+  "word1": "은행",
+  "word2": "바다",
+  "theme": "가치를 저장하는 공간",
+  "difficulty": "${difficulty}",
+  "category1": "경제",
+  "category2": "자연",
+  "tags": ["경제", "자연", "비교", "상상"]
 }
 `;
 }

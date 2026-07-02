@@ -21,12 +21,8 @@
 // ============================================================================
 
 export {
-  difficultySchema,
-  wordPairSchema,
   feedbackSchema,
   rubricSchema,
-  type Difficulty,
-  type WordPair,
   type AttemptRubric,
   type Feedback,
 } from './ai/types';
@@ -74,7 +70,7 @@ export { generateWordPair } from './ai/word-generation';
  *   word1: "그림자",
  *   word2: "약속",
  *   question: "그림자처럼 보이지는 않지만 꼭 우리 곁에 있는 약속은?",
- *   difficulty: "normal"
+ *   difficulty: "normal",
  * });
  * 
  * // 반환:

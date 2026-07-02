@@ -1,7 +1,7 @@
 import { google } from '@ai-sdk/google';
 import { generateObject } from 'ai';
-import { wordPairSchema, type Difficulty, type WordPair } from './types';
 import { getWordGenerationPrompt } from './prompts';
+import { Difficulty, WordPair, wordPairSchema } from '../word-pairs/types';
 
 const model = google('gemini-2.5-flash');
 

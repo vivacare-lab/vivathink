@@ -1,7 +1,7 @@
 'use server';
 
 import { createAdminClient } from '@/lib/supabase/admin';
-import { Difficulty, WordPair } from '@/lib/ai';
+import { Difficulty, WordPair } from '@/lib/word-pairs/types';
 
 const RECENT_LOOKBACK_DAYS = 30; // 30일 이내 중복 방지
 const RECENT_LIMIT = 50; // 최근 50개까지만 추적
@@ -65,6 +65,16 @@ export async function recordWordPairUsage(
   }
 }
 
+/**
+ * 로컬 풀에서 아이가 최근에 사용하지 않은 단어 쌍을 선택합니다.
+ * 
+ * 알고리즘:
+ * // 추후 기재
+ * 
+ * @param childId 아이 ID
+ * @param difficulty 난이도
+ * @returns 선택된 단어 쌍 또는 null (풀이 비어있을 경우)
+ */
 export async function getNewWordsAvoidingRecent(
   childId: string,
   difficulty: Difficulty,
@@ -74,7 +84,7 @@ export async function getNewWordsAvoidingRecent(
 
   const { data, error } = await supabase
     .from('ai_word_pairs')
-    .select('word1, word2, theme, difficulty')
+    .select('word1, word2, theme, difficulty, category1, category2, tags')
     .eq('difficulty', difficulty)
     .limit(CANDIDATE_LIMIT);
 
@@ -100,6 +110,9 @@ export async function getNewWordsAvoidingRecent(
       word2: picked.word2,
       theme: picked.theme,
       difficulty: picked.difficulty as Difficulty,
+      category1: picked.category1,
+      category2: picked.category2,
+      tags: picked.tags,
     }
     : null;
 }

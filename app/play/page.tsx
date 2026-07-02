@@ -5,10 +5,13 @@ import { getChildRecentAttempts, getNewWords } from '@/app/actions/play';
 import PlayStudio from '@/components/play-studio';
 
 const fallbackWords: WordPair = {
-  word1: '구름',
-  word2: '고양이',
-  theme: '하늘과 동물이 만나는 상상',
-  difficulty: 'creative',
+  word1: "은행",
+  word2: "바다",
+  theme: "가치를 저장하는 공간",
+  difficulty: "normal",
+  category1: "경제",
+  category2: "자연",
+  tags: ["경제", "자연", "비교", "상상"]
 };
 
 export default async function PlayPage() {

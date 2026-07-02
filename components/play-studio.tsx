@@ -5,7 +5,7 @@ import { Sparkles, Send, RotateCcw, Gift } from 'lucide-react';
 import { getNewWords, submitQuestion } from '@/app/actions/play';
 
 import { AttemptRecord } from '@/lib/play/types';
-import { WordPair } from '@/lib/ai';
+import { WordPair } from '@/lib/word-pairs/types';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';

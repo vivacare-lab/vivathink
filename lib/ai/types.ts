@@ -1,23 +1,5 @@
 import { z } from 'zod';
-
-export const difficultySchema = z.enum([
-  'easy',
-  'normal',
-  'hard',
-  'creative',
-  'abstract',
-]);
-
-export type Difficulty = z.infer<typeof difficultySchema>;
-
-export const wordPairSchema = z.object({
-  word1: z.string().min(1),
-  word2: z.string().min(1),
-  theme: z.string().min(1),
-  difficulty: difficultySchema,
-});
-
-export type WordPair = z.infer<typeof wordPairSchema>;
+import { difficultySchema } from '../word-pairs/types';
 
 export const rubricSchema = z.object({
   connection: z.number().min(0).max(25),

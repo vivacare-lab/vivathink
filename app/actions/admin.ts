@@ -1,7 +1,7 @@
 'use server';
 
 import { generateWordPair } from '@/lib/ai/word-generation';
-import type { Difficulty, WordPair } from '@/lib/ai/types';
+import type { Difficulty, WordPair } from '@/lib/word-pairs/types';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getParentSession } from '@/lib/auth/parent';
 
@@ -56,9 +56,12 @@ export async function generateAndSaveAiWordPair(
         word2: wordPair.word2,
         theme: wordPair.theme,
         difficulty: wordPair.difficulty,
+        category1: wordPair.category1,
+        category2: wordPair.category2,
+        tags: wordPair.tags,
         source: 'ai',
       })
-      .select('word1, word2, theme, difficulty')
+      .select('word1, word2, theme, difficulty, category1, category2, tags')
       .single();
 
     if (error) {
@@ -83,6 +86,9 @@ export async function generateAndSaveAiWordPair(
         word2: data.word2,
         theme: data.theme,
         difficulty: data.difficulty,
+        category1: data.category1,
+        category2: data.category2,
+        tags: data.tags,
       },
     };
   } catch (error) {
