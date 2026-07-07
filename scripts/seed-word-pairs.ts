@@ -314,7 +314,15 @@ async function seedWordPairs() {
             const allTagNames = rowsToInsert.flatMap((pair) => pair.tags);
             const tagIdByName = await upsertTags(allTagNames);
 
-            const wordPairRows = rowsToInsert.map(({ tags, ...pair }) => pair);
+            const wordPairRows = rowsToInsert.map((pair) => ({
+                word1: pair.word1,
+                word2: pair.word2,
+                theme: pair.theme,
+                difficulty: pair.difficulty,
+                category1: pair.category1,
+                category2: pair.category2,
+                pair_key: pair.pair_key,
+            }));
 
             const { data, error: insertError } = await supabase
                 .from('ai_word_pairs')

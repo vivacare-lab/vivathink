@@ -1,5 +1,5 @@
-import type { Difficulty } from '@/lib/ai';
 import type { AttemptRecord } from '@/lib/play/types';
+import { Difficulty } from '../word-pairs/types';
 
 const difficultyOrder: Difficulty[] = [
   'easy',

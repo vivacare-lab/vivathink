@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { difficultySchema } from '../word-pairs/types';
 
 export const rubricSchema = z.object({
   connection: z.number().min(0).max(25),

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getChildSession } from '@/lib/child-session';
-import { WordPair } from '@/lib/ai';
+import { WordPair } from '@/lib/word-pairs/types';
 import { getChildRecentAttempts, getNewWords } from '@/app/actions/play';
 import PlayStudio from '@/components/play-studio';
 

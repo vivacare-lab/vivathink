@@ -1,9 +1,8 @@
-// components/parent/word-pair-manager.tsx
 'use client';
 
 import { useState } from 'react';
 import { generateAndSaveAiWordPair } from '@/app/actions/admin';
-import { Difficulty } from '@/lib/ai/types';
+import { Difficulty } from '@/lib/word-pairs/types';
 
 export function WordPairManager() {
     const [isLoading, setIsLoading] = useState(false);

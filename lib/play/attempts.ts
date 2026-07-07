@@ -2,7 +2,8 @@ import 'server-only';
 
 import { createAdminClient } from '@/lib/supabase/admin';
 import type { AttemptRecord } from './types';
-import type { Difficulty, Feedback } from '@/lib/ai';
+import type { Difficulty } from '@/lib/word-pairs/types';
+import { Feedback } from '@/lib/ai';
 
 const ATTEMPT_SELECT =
   'id, word1, word2, question, feedback, score, strengths, suggestion, level, next_question_hint, rubric, difficulty, created_at';
