@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && npm run lint",
+    "typecheck:scripts": "tsc --noEmit -p tsconfig.scripts.json",
     "seed:word-pairs": "tsx scripts/seed-word-pairs.ts"
   },
   "dependencies": {
@@ -41,6 +42,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
+    "tsx": "^4.23.0",
     "typescript": "^5"
   }
 }

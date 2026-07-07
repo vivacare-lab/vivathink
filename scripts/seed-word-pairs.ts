@@ -17,14 +17,19 @@
  * npx ts-node migration/seed-word-pairs.ts
  */
 
-import 'dotenv/config';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '.env.local' });
+dotenv.config({ path: '.env' });
 
 import { createClient } from '@supabase/supabase-js';
-import easy from '../data/easy.json' with { type: 'json' };
-import normal from '../data/normal.json' with { type: 'json' };
-import hard from '../data/hard.json' with { type: 'json' };
-import creative from '../data/creative.json' with { type: 'json' };
-import abstract from '../data/abstract.json' with { type: 'json' };
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+// import easy from '../data/easy.json' with { type: 'json' };
+// import normal from '../data/normal.json' with { type: 'json' };
+// import hard from '../data/hard.json' with { type: 'json' };
+// import creative from '../data/creative.json' with { type: 'json' };
+// import abstract from '../data/abstract.json' with { type: 'json' };
 
 type Difficulty = 'easy' | 'normal' | 'hard' | 'creative' | 'abstract';
 
@@ -36,8 +41,6 @@ type LocalWordPair = {
     category2: string;
     tags: string[];
 };
-
-type LocalWordPairsJson = Record<Difficulty, LocalWordPair[]>;
 
 type SeedWordPair = LocalWordPair & {
     difficulty: Difficulty;
@@ -188,6 +191,16 @@ async function upsertTags(tagNames: string[]) {
     );
 }
 
+function chunkArray<T>(array: T[], size: number) {
+    const chunks: T[][] = [];
+
+    for (let index = 0; index < array.length; index += size) {
+        chunks.push(array.slice(index, index + size));
+    }
+
+    return chunks;
+}
+
 async function insertTagLinks(
     insertedPairs: InsertedWordPairRow[],
     rowsToInsert: SeedWordPair[],
@@ -224,29 +237,67 @@ async function insertTagLinks(
         return 0;
     }
 
-    const { error } = await supabase
-        .from('ai_word_pair_tag_links')
-        .upsert(links, {
-            onConflict: 'word_pair_id,tag_id',
-        });
+    for (const linkChunk of chunkArray(links, 100)) {
+        const { error } = await supabase
+            .from('ai_word_pair_tag_links')
+            .upsert(linkChunk, {
+                onConflict: 'word_pair_id,tag_id',
+            });
 
-    if (error) {
-        throw new Error(`태그 링크 INSERT 실패: ${error.message}`);
+        if (error) {
+            console.error('태그 링크 INSERT 실패 상세:', error);
+            throw new Error(`태그 링크 INSERT 실패: ${error.message}`);
+        }
     }
 
     return links.length;
 }
 
+async function loadWordPairsFile(
+    difficulty: Difficulty,
+): Promise<LocalWordPair[]> {
+    const filePath = path.join(process.cwd(), 'data', `${difficulty}.json`);
+
+    let raw = '';
+
+    try {
+        raw = await readFile(filePath, 'utf8');
+    } catch {
+        console.warn(`⚠️  [${difficulty}] 파일 없음: ${filePath}`);
+        return [];
+    }
+
+    if (!raw.trim()) {
+        console.warn(`⚠️  [${difficulty}] JSON 파일이 비어 있어 PASS합니다.`);
+        return [];
+    }
+
+    try {
+        const parsed = JSON.parse(raw) as unknown;
+
+        if (!Array.isArray(parsed)) {
+            throw new Error('JSON 루트는 배열이어야 합니다.');
+        }
+
+        return parsed as LocalWordPair[];
+    } catch (error) {
+        throw new Error(
+            `[${difficulty}] JSON 파싱 실패: ${error instanceof Error ? error.message : String(error)
+            }`,
+        );
+    }
+}
+
 async function seedWordPairs() {
     console.log('🌱 로컬 단어 쌍 데이터 로드 시작...\n');
 
-    const source = {
-        easy,
-        normal,
-        hard,
-        creative,
-        abstract,
-    } as unknown as LocalWordPairsJson;
+    // const source = {
+    //     easy,
+    //     normal,
+    //     hard,
+    //     creative,
+    //     abstract,
+    // } as unknown as LocalWordPairsJson;
 
     let totalSource = 0;
     let totalFileDuplicate = 0;
@@ -255,10 +306,10 @@ async function seedWordPairs() {
     let totalTagLinks = 0;
 
     for (const difficulty of difficulties) {
-        const pairs = source[difficulty] ?? [];
+        const pairs = await loadWordPairsFile(difficulty);
 
         if (pairs.length === 0) {
-            console.warn(`⚠️  [${difficulty}] 데이터 없음\n`);
+            console.warn(`⚠️  [${difficulty}] 업로드할 데이터 없음\n`);
             continue;
         }
 
@@ -286,19 +337,27 @@ async function seedWordPairs() {
 
         const pairKeys = uniquePairs.map((pair) => pair.pair_key);
 
-        const { data: existingRows, error: existingError } = await supabase
-            .from('ai_word_pairs')
-            .select('pair_key')
-            .in('pair_key', pairKeys);
+        const existingRows: { pair_key: string }[] = [];
 
-        if (existingError) {
-            throw new Error(
-                `[${difficulty}] 기존 데이터 조회 실패: ${existingError.message}`,
-            );
+        for (const pairKeyChunk of chunkArray(pairKeys, 30)) { // 30씩 나누어 작업 -> 문제 없는 경우 50 또는 100으로 변경 가능
+            const { data, error } = await supabase
+                .from('ai_word_pairs')
+                .select('pair_key')
+                .in('pair_key', pairKeyChunk);
+
+            if (error) {
+                console.error(`[${difficulty}] 기존 데이터 조회 실패 상세:`, error);
+
+                throw new Error(
+                    `[${difficulty}] 기존 데이터 조회 실패: ${error.message}`,
+                );
+            }
+
+            existingRows.push(...((data ?? []) as { pair_key: string }[]));
         }
 
         const existingKeys = new Set(
-            (existingRows ?? []).map((row) => row.pair_key as string),
+            existingRows.map((row) => row.pair_key),
         );
 
         const rowsToInsert = uniquePairs.filter(
@@ -307,7 +366,7 @@ async function seedWordPairs() {
 
         totalDbDuplicate += existingKeys.size;
 
-        let insertedPairs: InsertedWordPairRow[] = [];
+        const insertedPairs: InsertedWordPairRow[] = [];
         let insertedTagLinks = 0;
 
         if (rowsToInsert.length > 0) {
@@ -322,20 +381,26 @@ async function seedWordPairs() {
                 category1: pair.category1,
                 category2: pair.category2,
                 pair_key: pair.pair_key,
+                source: 'local',
             }));
 
-            const { data, error: insertError } = await supabase
-                .from('ai_word_pairs')
-                .insert(wordPairRows)
-                .select('id, pair_key');
+            for (const wordPairRowChunk of chunkArray(wordPairRows, 50)) {
+                const { data, error: insertError } = await supabase
+                    .from('ai_word_pairs')
+                    .insert(wordPairRowChunk)
+                    .select('id, pair_key');
 
-            if (insertError) {
-                throw new Error(
-                    `[${difficulty}] ai_word_pairs INSERT 실패: ${insertError.message}`,
-                );
+                if (insertError) {
+                    console.error(`[${difficulty}] ai_word_pairs INSERT 실패 상세:`, insertError);
+
+                    throw new Error(
+                        `[${difficulty}] ai_word_pairs INSERT 실패: ${insertError.message}`,
+                    );
+                }
+
+                insertedPairs.push(...((data ?? []) as InsertedWordPairRow[]));
             }
 
-            insertedPairs = (data ?? []) as InsertedWordPairRow[];
             insertedTagLinks = await insertTagLinks(
                 insertedPairs,
                 rowsToInsert,
